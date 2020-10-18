@@ -17,3 +17,6 @@ steps:
     errorActionPreference: 'stop'
   displayName: 'Write to the Host: Hello World!'
 
+- powershell: 'Get-Module'
+
+- powershell: 'Get-module -ListAvailable'
