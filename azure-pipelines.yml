@@ -21,6 +21,6 @@ steps:
   inputs:
     azureSubscription: SvcConn-AlMargoi
     scriptType: inlineScript
-    Inline: 'Get-AzureRMAutomationAccount | FL '
+    Inline: 'Import-Module AzureRM.Automation; Get-AzureRMAutomationAccount | FL '
     azurePowerShellVersion: latestVersion
   displayName: "Attempt to Get-AzureRmAutomationAccount"
