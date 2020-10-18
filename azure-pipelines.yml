@@ -21,6 +21,6 @@ steps:
   inputs:
     azureSubscription: SvcConn-AlMargoi
     scriptType: inlineScript
-    Inline: 'Get-AzureRmSubscription -SubscriptionID "b7e1b8b9-8163-41ce-9daa-9bf149287dd1" | Select-AzureRMSubscription;  Get-AzureRMAutomationAccount | FL '
+    Inline: 'Get-AzureRMAutomationAccount | FL '
     azurePowerShellVersion: latestVersion
   displayName: "Attempt to Get-AzureRmAutomationAccount"
