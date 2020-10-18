@@ -17,16 +17,10 @@ steps:
     errorActionPreference: 'stop'
   displayName: 'Write to the Host: Hello World!'
 
-- task: PowerShell@2
+- task: AzurePowerShell@4
   inputs:
-    targetType: 'inline'
-    script: 'Import-Module AzureRm.Automation'
-    errorActionPreference: 'stop'
-  displayName: 'Import the AzureRM.Automation module.'
-  
-- task: PowerShell@2
-  inputs:
-    targetType: 'inline'
-    script: 'Login-AzureRMAccount; Get-AzureRMAutomationAccount | FL'
-    errorActionPreference: 'stop'
-  displayName: 'Attempt to fetch Automation Accounts'
+    azureSubscription: my-arm-service-connection
+    scriptType: inlineScript
+    Inline: 'Get-AzureRMAutomationAccount | FL '
+    azurePowerShellVersion: latestVersion
+  displayName: "Attempt to Get-AzureRmAutomationAccount"
