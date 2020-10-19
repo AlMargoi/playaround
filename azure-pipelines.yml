@@ -60,6 +60,7 @@ steps:
         $Exception = $_.Exception
         if($Exception.Message -notlike "*already exists*")
         {
+          Write-Output "$($Exception.GetType()) - $($Exception.Message)"
           throw $Exception
         }
         else
