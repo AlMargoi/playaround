@@ -1,3 +1,3 @@
 $x = Get-Time 
 Write-Output "$x"
-"This change here makes no difference"
+Write-Output "Time should have been displayed. It is quite late for work related stuff."
