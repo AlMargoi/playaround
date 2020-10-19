@@ -9,11 +9,21 @@ trigger:
 pool:
   vmImage: 'windows-2019'
 
+variables:
+  ResourceGroup: "AutomationRG"
+  AutomationAccountName: "AutoAutoAcc"
+  Location: "WestEurope"
+  RunbookName: "PipelineScript"
+  RunbookType: "Powershell"
+  SourceScriptPath: $(System.DefaultWorkingDirectory)\Script.ps1
+
+
+
 steps:
 - task: PowerShell@2
   inputs:
     targetType: 'inline'
-    script: 'Write-Host "Hello World!"'
+    script: 'Write-Host "Hello World!!!"'
     errorActionPreference: 'stop'
   displayName: 'Write to the Host: Hello World!'
 
@@ -21,6 +31,16 @@ steps:
   inputs:
     azureSubscription: SvcConn-AlMargoi
     scriptType: inlineScript
-    Inline: Get-AzAutomationScheduledRunbook -AutomationAccountName "AutoAutoAcc" -ResourceGroupName "AutomationRG" | FL
+    Inline: New-AzAutomationAccount -Name @(AutomationAccountName) -ResourceGroup $(ResourceGroup) -Location $(Location) -Plan "Free"
     azurePowerShellVersion: latestVersion
-  displayName: "Attempt to Get-AzureRmAutomationAccount"
+  displayName: "Create 'AutoAutoAcc' automation account."
+  
+- task: AzurePowerShell@4
+  inputs:
+    azureSubscription: SvcConn-AlMargoi
+    scriptType: inlineScript
+    Inline: |
+      Import-AzAutomationRunbook -Name $(RunbookName) -Path $($SourceScriptPath) `
+        -ResourceGroupName $(RG) -AutomationAccountName $(AutomationAccountName) -Type $(RunbookType)
+    azurePowerShellVersion: latestVersion
+  displayName: "Create 'AutoAutoAcc' automation account."
