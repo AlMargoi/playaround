@@ -41,6 +41,6 @@ steps:
     scriptType: inlineScript
     Inline: |
       Import-AzAutomationRunbook -Name $(RunbookName) -Path $($SourceScriptPath) `
-        -ResourceGroupName $(RResourceGroup) -AutomationAccountName $(AutomationAccountName) -Type $(RunbookType)
+        -ResourceGroupName $(ResourceGroup) -AutomationAccountName $(AutomationAccountName) -Type $(RunbookType)
     azurePowerShellVersion: latestVersion
   displayName: "Create 'AutoAutoAcc' automation account."
