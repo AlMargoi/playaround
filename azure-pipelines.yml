@@ -31,7 +31,7 @@ steps:
   inputs:
     azureSubscription: SvcConn-AlMargoi
     scriptType: inlineScript
-    Inline: New-AzAutomationAccount -Name @(AutomationAccountName) -ResourceGroup $(ResourceGroup) -Location $(Location) -Plan "Free"
+    Inline: New-AzAutomationAccount -Name $(AutomationAccountName) -ResourceGroup $(ResourceGroup) -Location $(Location) -Plan "Free"
     azurePowerShellVersion: latestVersion
   displayName: "Create 'AutoAutoAcc' automation account."
   
