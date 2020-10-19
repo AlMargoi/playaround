@@ -14,7 +14,7 @@ variables:
   AutomationAccountName: "AutoAutoAcc"
   Location: "WestEurope"
   RunbookName: "PipelineScript"
-  RunbookType: "Powershell"
+  RunbookType: "PowerShell"
   SourceScriptPath: $(System.DefaultWorkingDirectory)\Script.ps1
 
 
