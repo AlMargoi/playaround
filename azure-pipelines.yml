@@ -40,7 +40,7 @@ steps:
     azureSubscription: SvcConn-AlMargoi
     scriptType: inlineScript
     Inline: |
-      Import-AzAutomationRunbook -Name $(RunbookName) -Path $($SourceScriptPath) `
+      Import-AzAutomationRunbook -Name $(RunbookName) -Path $(SourceScriptPath) `
         -ResourceGroupName $(ResourceGroup) -AutomationAccountName $(AutomationAccountName) -Type $(RunbookType)
     azurePowerShellVersion: latestVersion
   displayName: "Create 'AutoAutoAcc' automation account."
