@@ -43,4 +43,18 @@ steps:
       Import-AzAutomationRunbook -Name $(RunbookName) -Path $(SourceScriptPath) `
         -ResourceGroupName $(ResourceGroup) -AutomationAccountName $(AutomationAccountName) -Type $(RunbookType)
     azurePowerShellVersion: latestVersion
-  displayName: "Create 'AutoAutoAcc' automation account."
+  displayName: "Import the script to the Automation Account."
+
+- task: AzurePowerShell@4
+  inputs:
+    azureSubscription: SvcConn-AlMargoi
+    scriptType: inlineScript
+    Inline: |
+       Publish-AzAutomationRunbook -AutomationAccountName $(AutomationAccountName) `
+        -Name $(RunbookName) -ResourceGroupName $(ResourceGroup)
+    azurePowerShellVersion: latestVersion
+  displayName: "Publish the previous script"
+
+
+
+ 
