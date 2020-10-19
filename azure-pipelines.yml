@@ -50,8 +50,23 @@ steps:
     azureSubscription: SvcConn-AlMargoi
     scriptType: inlineScript
     Inline: |
-       Publish-AzAutomationRunbook -AutomationAccountName $(AutomationAccountName) `
-        -Name $(RunbookName) -ResourceGroupName $(ResourceGroup)
+      try
+      {
+        Publish-AzAutomationRunbook -AutomationAccountName $(AutomationAccountName) `
+          -Name $(RunbookName) -ResourceGroupName $(ResourceGroup) -ErrorAction STOP
+      }
+      catch
+      {
+        $Exception = $_.Exception
+        if($Exception.Message -notlike "*already exists*")
+        {
+          throw $Exception
+        }
+        else
+        {
+          Write-Output "The runbook already exists. Expected. Continuing"
+        }
+      }
     azurePowerShellVersion: latestVersion
   displayName: "Publish the previous script"
 
