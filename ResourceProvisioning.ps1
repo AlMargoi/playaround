@@ -44,7 +44,7 @@ else{
 #endregion check/create Automation Account
 
 #region import Runbook
-if($Runbook = Get-AzAutomationRunbook -Name $RunbookName -ResourceGroupName $ResourceGroupName -AutomationAccountName $AutomationAccount -ErrorAction SilentlyContinue){
+if($Runbook = Get-AzAutomationRunbook -Name $RunbookName -ResourceGroupName $ResourceGroupName -AutomationAccountName $AutomationAccountName -ErrorAction SilentlyContinue){
     Write-Output "Automation Runbook $RunbookName exists. Creation time: $($Runbook.CreationTime). Last modified time: $($Runbook.LastModifiedTime)"
     Write-Output "Will attept to overwrite with newest version from the Devops Git Repo."
 }else{
