@@ -64,7 +64,7 @@ try{
 
 #region publish the automation runbook
 try{
-    Publish-AzAutomationRunbook -AutomationAccountName $AutomationAccountName -Name $RunbookName -ResourceGroupName $ResourceGroupName
+    Publish-AzAutomationRunbook -AutomationAccountName $AutomationAccountName -Name $RunbookName -ResourceGroupName $ResourceGroupName -ErrorAction STOP
     Write-Output "Succesfully published the automation runbook."
 }catch{
     $Exception = $_.Exception
