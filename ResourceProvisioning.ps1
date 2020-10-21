@@ -10,7 +10,7 @@ param(
 )
 
 #region check/create Resource Group
-Write-Output "> Start: Check/Create Resource Group: $ResourceGroupName...    "
+Write-Output "> `nStart: Check/Create Resource Group: $ResourceGroupName...    "
 if(Get-AzResourceGroup -Name $ResourceGroupName -ErrorAction SilentlyContinue){
     Write-Output "ResourceGroup $ResourceGroupName exists. Skipping creation"
 }
@@ -28,7 +28,7 @@ else{
 #endregion check/create Resource Group
  
 #region check/create Automation Account
-Write-Output "> Start Check/Create Automation Account $AutomationAccount..."
+Write-Output "> `nStart Check/Create Automation Account $AutomationAccount..."
 if(Get-AzAutomationAccount -Name $AutomationAccountName -ResourceGroupName $ResourceGroupName -ErrorAction SilentlyContinue){
     Write-Output "Automation Account $AutomationAccountName exists. Skipping creation"
 }
@@ -46,6 +46,7 @@ else{
 #endregion check/create Automation Account
 
 #region import Runbook
+Write-Output "> `nStart check/create $RunbookName runbook."
 if($Runbook = Get-AzAutomationRunbook -Name $RunbookName -ResourceGroupName $ResourceGroupName -AutomationAccountName $AutomationAccountName -ErrorAction SilentlyContinue){
     Write-Output "Automation Runbook $RunbookName exists. Creation time: $($Runbook.CreationTime). Last modified time: $($Runbook.LastModifiedTime)"
     Write-Output "Will attept to overwrite with newest version from the Devops Git Repo."
@@ -53,6 +54,7 @@ if($Runbook = Get-AzAutomationRunbook -Name $RunbookName -ResourceGroupName $Res
     Write-Output "Automation Runbook $RunbookName does not exist. Attempting import."
 }
 
+Write-Output "> `nStart importing the [Repository\$($RunbookPath)] script into the Runbook."
 try{
     Import-AzAutomationRunbook -Name $RunbookName -Path $RunbookPath -ResourceGroupName $ResourceGroupName `
          -AutomationAccountName $AutomationAccountName -Type $RunbookType  -Force -ErrorAction STOP
@@ -65,6 +67,7 @@ try{
 #endregion import Runbook
 
 #region publish the automation runbook
+Write-Output "> `nStart publishing the $RunbookName runbook."
 try{
     Publish-AzAutomationRunbook -AutomationAccountName $AutomationAccountName -Name $RunbookName -ResourceGroupName $ResourceGroupName -ErrorAction STOP
     Write-Output "Succesfully published the automation runbook."
@@ -76,6 +79,7 @@ try{
 #endregion publish the automation runbook
 
 #region check/create webhook
+Write-Output "> `nStart check/create $WebhookName webook."
 $Webhook = Get-AzAutomationWebhook -RunbookName $RunbookName -AutomationAccountName $AutomationAccountName `
              -ResourceGroupName $ResourceGroupName  -ErrorAction SilentlyContinue | ? {$_.Name -eq $WebhookName}
 if($Webhook){
@@ -83,7 +87,7 @@ if($Webhook){
 }else{  
     try{
         Write-Output "Attempting to create $WebhookName webhook." 
-        $Webhook = New-AzAutomationWebhook -Name $WebhookName -IsEnabled $True -ExpiryTime (Get-Date).AddYears(1) -RunbookName $RunbookName -ResourceGroup $ResourceGroupName -AutomationAccountName $AutomationAccountName-Force
+        $Webhook = New-AzAutomationWebhook -Name $WebhookName -IsEnabled $True -ExpiryTime (Get-Date).AddYears(1) -RunbookName $RunbookName -ResourceGroup $ResourceGroupName -AutomationAccountName $AutomationAccountName -Force
         Write-Output "Webhook $Webhook successfully created. WebhookURI: $($Webhook.WebhookURI)" 
     }catch{
         $Exception = $_.Exception
