@@ -10,12 +10,14 @@ pool:
   vmImage: 'windows-2019'
 
 variables:
-  ResourceGroup: "AutomationRG"
-  AutomationAccountName: "AutoAutoAcc"
-  Location: "WestEurope"
-  RunbookName: "PipelineScript"
-  RunbookType: "PowerShell"
-  SourceScriptPath: $(System.DefaultWorkingDirectory)\Script.ps1
+  ResourceGroupName:                "AutomationRG"
+  AutomationAccountName:            "AutoAutoAcc"
+  Location:                         "WestEurope"
+  RunbookName:                      "PipelineScript"
+  RunbookType:                      "PowerShell"
+  RunbookPath:                      $(System.DefaultWorkingDirectory)\Script.ps1
+  WebhookName:                      "PipelineScriptWebhook"
+  ResourceProvisioningScriptPath:   $(System.DefaultWorkingDirectory)\ResourceProvisioning.ps1
 
 
 
@@ -30,46 +32,21 @@ steps:
 - task: AzurePowerShell@4
   inputs:
     azureSubscription: SvcConn-AlMargoi
-    scriptType: inlineScript
-    Inline: New-AzAutomationAccount -Name $(AutomationAccountName) -ResourceGroup $(ResourceGroup) -Location $(Location) -Plan "Free"
+    scriptType: filePath
+    scriptPath: $(ResourceProvisioningScriptPath)
+    scriptArguments:
+      -$ResourceGroupName         $(ResourceGroupName)     
+      -$AutomationAccountName     $(AutomationAccountName)
+      -$Location                  $(Location)
+      -$RunbookName               $(RunbookName)
+      -$RunbookType               $(RunbookType)
+      -$RunbookPath               $(RunbookPath)
+      -$WebhookName               $(WebhookName)
     azurePowerShellVersion: latestVersion
-  displayName: "Create 'AutoAutoAcc' automation account."
+  displayName: "Create RG, AutAccount, Runbook, Import runbook, publish, create Webhook"
   
-- task: AzurePowerShell@4
-  inputs:
-    azureSubscription: SvcConn-AlMargoi
-    scriptType: inlineScript
-    Inline: |
-      Import-AzAutomationRunbook -Name $(RunbookName) -Path $(SourceScriptPath) `
-        -ResourceGroupName $(ResourceGroup) -AutomationAccountName $(AutomationAccountName) -Type $(RunbookType)
-    azurePowerShellVersion: latestVersion
-  displayName: "Import the script to the Automation Account."
 
-- task: AzurePowerShell@4
-  inputs:
-    azureSubscription: SvcConn-AlMargoi
-    scriptType: inlineScript
-    Inline: |
-      try
-      {
-        Publish-AzAutomationRunbook -AutomationAccountName $(AutomationAccountName) `
-          -Name $(RunbookName) -ResourceGroupName $(ResourceGroup) -ErrorAction STOP
-      }
-      catch
-      {
-        $Exception = $_.Exception
-        if($Exception.Message -notlike "*already exists*")
-        {
-          Write-Output "$($Exception.GetType()) - $($Exception.Message)"
-          throw $Exception
-        }
-        else
-        {
-          Write-Output "The runbook already exists. Expected. Continuing"
-        }
-      }
-    azurePowerShellVersion: latestVersion
-  displayName: "Publish the previous script"
+
 
 
 
