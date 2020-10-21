@@ -44,17 +44,17 @@ else{
 #endregion check/create Automation Account
 
 #region import Runbook
-if($Runbook = Get-AzAutomationRunbook -Name $RunbookName-ResourceGroupName $ResourceGroupName -AutomationAccountName $AutomationAccount){
-    Write-Output "Automation Runbook $RunbookNameexists. Creation time: $($Runbook.CreationTime). Last modified time: $($Runbook.LastModifiedTime)"
+if($Runbook = Get-AzAutomationRunbook -Name $RunbookName -ResourceGroupName $ResourceGroupName -AutomationAccountName $AutomationAccount){
+    Write-Output "Automation Runbook $RunbookName exists. Creation time: $($Runbook.CreationTime). Last modified time: $($Runbook.LastModifiedTime)"
     Write-Output "Will attept to overwrite with newest version from the Devops Git Repo."
 }else{
-    Write-Output "Automation Runbook $RunbookNamedoes not exist. Attempting import."
+    Write-Output "Automation Runbook $RunbookName does not exist. Attempting import."
 }
 
 try{
-    Import-AzAutomationRunbook -Name $RunbookName-Path $RunbookPath -ResourceGroupName $ResourceGroupName `
+    Import-AzAutomationRunbook -Name $RunbookName -Path $RunbookPath -ResourceGroupName $ResourceGroupName `
          -AutomationAccountName $AutomationAccountName-Type $RunbookType  -Force -ErrorAction STOP
-    Write-Output "Automation Runbook $RunbookNamesuccessfully imported."
+    Write-Output "Automation Runbook $RunbookName successfully imported."
 }catch{
     $Exception = $_.Exception
     Write-Output "ERROR: cannot import the Automation Runbook: $($Exception.GetType()) - $($Exception.Message)"
@@ -64,7 +64,7 @@ try{
 
 #region publish the automation runbook
 try{
-    Publish-AzAutomationRunbook -AutomationAccountName $AutomationAccountName -Name $RunbookName-ResourceGroupName $ResourceGroupName
+    Publish-AzAutomationRunbook -AutomationAccountName $AutomationAccountName -Name $RunbookName -ResourceGroupName $ResourceGroupName
     Write-Output "Succesfully published the automation runbook."
 }catch{
     $Exception = $_.Exception
@@ -74,12 +74,12 @@ try{
 #endregion publish the automation runbook
 
 #region check/create webhook
-if(Get-AzAutomationWebhook -Name $WebhookName -RunbookName $RunbookName-AutomationAccountName $AutomationAccountName-ResourceGroupName $ResourceGroupName){
+if(Get-AzAutomationWebhook -Name $WebhookName -RunbookName $RunbookName -AutomationAccountName $AutomationAccountName-ResourceGroupName $ResourceGroupName){
     Write-Output "Webhook $Webhook already exists. Skipping creation. (!!! Warning: we should remove webhook and create new one if the current one is close to expiry... NOTE: It needs to be replaced on the Logic App as well.)."
 }else{  
     try{
         Write-Output "Attempting to create $WebhookName webhook." 
-        $Webhook = New-AzAutomationWebhook -Name $WebhookName -IsEnabled $True -ExpiryTime (Get-Date).AddYears(1) -RunbookName $RunbookName-ResourceGroup $ResourceGroupName -AutomationAccountName $AutomationAccountName-Force
+        $Webhook = New-AzAutomationWebhook -Name $WebhookName -IsEnabled $True -ExpiryTime (Get-Date).AddYears(1) -RunbookName $RunbookName -ResourceGroup $ResourceGroupName -AutomationAccountName $AutomationAccountName-Force
         Write-Output "Webhook $Webhook successfully created. WebhookURI: $($Webhook.WebhookURI)" 
     }catch{
         $Exception = $_.Exception
