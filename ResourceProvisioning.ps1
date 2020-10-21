@@ -76,7 +76,9 @@ try{
 #endregion publish the automation runbook
 
 #region check/create webhook
-if(Get-AzAutomationWebhook -Name $WebhookName -RunbookName $RunbookName -AutomationAccountName $AutomationAccountName -ResourceGroupName $ResourceGroupName -ErrorAction SilentlyContinue){
+$Webhook = Get-AzAutomationWebhook -RunbookName $RunbookName -AutomationAccountName $AutomationAccountName `
+             -ResourceGroupName $ResourceGroupName  -ErrorAction SilentlyContinue ? {$_.Name -eq $WebhookName}
+if($Webhook){
     Write-Output "Webhook $Webhook already exists. Skipping creation. (!!! Warning: we should remove webhook and create new one if the current one is close to expiry... NOTE: It needs to be replaced on the Logic App as well.)."
 }else{  
     try{
