@@ -10,6 +10,7 @@ param(
 )
 
 #region check/create Resource Group
+Write-Output "> Start: Check/Create Resource Group: $ResourceGroupName...    "
 if(Get-AzResourceGroup -Name $ResourceGroupName -ErrorAction SilentlyContinue){
     Write-Output "ResourceGroup $ResourceGroupName exists. Skipping creation"
 }
@@ -25,8 +26,9 @@ else{
     }
 }
 #endregion check/create Resource Group
-
+ 
 #region check/create Automation Account
+Write-Output "> Start Check/Create Automation Account $AutomationAccount..."
 if(Get-AzAutomationAccount -Name $AutomationAccountName -ResourceGroupName $ResourceGroupName -ErrorAction SilentlyContinue){
     Write-Output "Automation Account $AutomationAccountName exists. Skipping creation"
 }
@@ -74,7 +76,7 @@ try{
 #endregion publish the automation runbook
 
 #region check/create webhook
-if(Get-AzAutomationWebhook -Name $WebhookName -RunbookName $RunbookName -AutomationAccountName $AutomationAccountName -ResourceGroupName $ResourceGroupName){
+if(Get-AzAutomationWebhook -Name $WebhookName -RunbookName $RunbookName -AutomationAccountName $AutomationAccountName -ResourceGroupName $ResourceGroupName -ErrorAction SilentlyContinue){
     Write-Output "Webhook $Webhook already exists. Skipping creation. (!!! Warning: we should remove webhook and create new one if the current one is close to expiry... NOTE: It needs to be replaced on the Logic App as well.)."
 }else{  
     try{
