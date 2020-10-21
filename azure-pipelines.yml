@@ -35,12 +35,12 @@ steps:
     scriptType: filePath
     scriptPath: $(ResourceProvisioningScriptPath)
     scriptArguments:
-      -ResourceGroupName         $(ResourceGroupName) `     
-      -AutomationAccountName     $(AutomationAccountName) `
-      -Location                  $(Location) `
-      -RunbookName               $(Runbook Name) `
-      -RunbookType               $(RunbookType) `
-      -RunbookPath               $(RunbookPath) `
+      -ResourceGroupName         $(ResourceGroupName)   
+      -AutomationAccountName     $(AutomationAccountName) 
+      -Location                  $(Location) 
+      -RunbookName               $(RunbookName) 
+      -RunbookType               $(RunbookType) 
+      -RunbookPath               $(RunbookPath) 
       -WebhookName               $(WebhookName)
     azurePowerShellVersion: latestVersion
   displayName: "Create RG, AutAccount, Runbook, Import runbook, publish, create Webhook"
