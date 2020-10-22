@@ -1,4 +1,3 @@
 $x = Get-Time 
-Write-Output "$x"
-Write-Output "Time should have been displayed. It is quite late for work related stuff."
-Write-Output "Cristina = cute"
+Write-Output "Current time is: $x"
+Write-Output "Done. Time displayed."
