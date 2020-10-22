@@ -5,7 +5,11 @@ param(
     [string][Parameter(Mandatory=$true)]$RunbookName,
     [string][Parameter(Mandatory=$true)]$RunbookType,
     [string][Parameter(Mandatory=$true)]$RunbookPath,
-    [string][Parameter(Mandatory=$true)]$WebhookName
+    [string][Parameter(Mandatory=$true)]$WebhookName,
+    [string][Parameter(Mandatory=$true)]$APIMSName,
+    [string][Parameter(Mandatory=$True)]$APIMSSku,
+    [string][Parameter(Mandatory=$True)]$APIMSOrganization,
+    [string][Parameter(Mandatory=$True)]$APIMSAdminEmail
     
 )
 
@@ -81,7 +85,7 @@ try{
 #region check/create webhook
 Write-Output "`n > Start check/create $WebhookName webook."
 $Webhook = Get-AzAutomationWebhook -RunbookName $RunbookName -AutomationAccountName $AutomationAccountName `
-             -ResourceGroupName $ResourceGroupName  -ErrorAction SilentlyContinue | ? {$_.Name -eq $WebhookName}
+             -ResourceGroupName $ResourceGroupName  -ErrorAction SilentlyContinue | Where-Object {$_.Name -eq $WebhookName}
 if($Webhook){
     Write-Output "Webhook $Webhook already exists. Skipping creation. (!!! Warning: we should remove webhook and create new one if the current one is close to expiry... NOTE: It needs to be replaced on the Logic App as well.)."
 }else{  
@@ -96,3 +100,21 @@ if($Webhook){
     }
 }
 #endregion check/create webhook
+
+#region check/crete API Management Service
+Write-Output "`n > Start check/create $APIMSName API Management Service."
+$APIMS = Get-AzApiManagement -ResourceGroupName $ResourceGroupName -Name $APIMSName -ErrorAction SilentlyContinue
+if($APIMS){
+    Write-Output "API Management Service $APIMSName already exists. Skipping cretion."
+}else {
+    try{    
+        Write-Output "Attempting to create the $APIMSName API Management Service."
+        New-AzApiManagement -ResourceGroupName $ResourceGroupName -Name $APIMSName -Organization $APIMSOrganization `
+         -Location $Location -Sku $APIMSSku -AdminEmail $APIMSAdminEmail -ErrorAction Stop
+        Write-Output "API Management Service $APIMSName was successfully created."
+    }catch{
+        $Exception = $_.Exception
+        Write-Output "ERROR: cannot create $APIMSName API Management Service: $($Exception.GetType()) - $($Exception.Message)"
+    }
+}
+#
