@@ -10,7 +10,7 @@ pool:
   vmImage: 'windows-2019'
 
 variables:
-  ResourceGroupName:                "Automation"
+  ResourceGroupName:                "AutomationRG"
   AutomationAccountName:            "ScriptsAutoAcc"
   Location:                         "WestEurope"
   RunbookName:                      "ViaPipelineScript"
