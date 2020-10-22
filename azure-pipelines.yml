@@ -31,7 +31,7 @@ steps:
 
 - task: AzurePowerShell@4
   inputs:
-    azureSubscription: SvcConn-AlMargoi
+    azureSubscription: ServiceConnection
     scriptType: filePath
     scriptPath: $(ResourceProvisioningScriptPath)
     scriptArguments:
