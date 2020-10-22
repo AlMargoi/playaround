@@ -5,11 +5,7 @@ param(
     [string][Parameter(Mandatory=$true)]$RunbookName,
     [string][Parameter(Mandatory=$true)]$RunbookType,
     [string][Parameter(Mandatory=$true)]$RunbookPath,
-    [string][Parameter(Mandatory=$true)]$WebhookName,
-    [string][Parameter(Mandatory=$true)]$APIMSName,
-    [string][Parameter(Mandatory=$True)]$APIMSSku,
-    [string][Parameter(Mandatory=$True)]$APIMSOrganization,
-    [string][Parameter(Mandatory=$True)]$APIMSAdminEmail
+    [string][Parameter(Mandatory=$true)]$WebhookName
     
 )
 
