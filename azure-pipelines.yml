@@ -10,10 +10,10 @@ pool:
   vmImage: 'windows-2019'
 
 variables:
-  ResourceGroupName:                "AutomationRG"
-  AutomationAccountName:            "AutoAutoAcc"
+  ResourceGroupName:                "Automation"
+  AutomationAccountName:            "ScriptsAutoAcc"
   Location:                         "WestEurope"
-  RunbookName:                      "PipelineScript"
+  RunbookName:                      "ViaPipelineScript"
   RunbookType:                      "PowerShell"
   RunbookPath:                      $(System.DefaultWorkingDirectory)\Script.ps1
   WebhookName:                      "PipelineScriptWebhook"
