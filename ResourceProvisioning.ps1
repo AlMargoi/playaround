@@ -100,21 +100,3 @@ if($Webhook){
     }
 }
 #endregion check/create webhook
-
-#region check/crete API Management Service
-Write-Output "`n > Start check/create $APIMSName API Management Service."
-$APIMS = Get-AzApiManagement -ResourceGroupName $ResourceGroupName -Name $APIMSName -ErrorAction SilentlyContinue
-if($APIMS){
-    Write-Output "API Management Service $APIMSName already exists. Skipping cretion."
-}else {
-    try{    
-        Write-Output "Attempting to create the $APIMSName API Management Service."
-        New-AzApiManagement -ResourceGroupName $ResourceGroupName -Name $APIMSName -Organization $APIMSOrganization `
-         -Location $Location -Sku $APIMSSku -AdminEmail $APIMSAdminEmail -ErrorAction Stop
-        Write-Output "API Management Service $APIMSName was successfully created."
-    }catch{
-        $Exception = $_.Exception
-        Write-Output "ERROR: cannot create $APIMSName API Management Service: $($Exception.GetType()) - $($Exception.Message)"
-    }
-}
-#
